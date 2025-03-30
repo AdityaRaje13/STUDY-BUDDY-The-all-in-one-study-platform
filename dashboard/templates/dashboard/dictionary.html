@@ -1,0 +1,96 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<style>
+
+    .content-section{
+        display: flex; 
+        align-items: center;
+        justify-content:center;
+        flex-direction: column;
+        gap: 10px;
+        border-radius : 20px;
+        box-shadow: 15px 15px 25px gray;
+    }
+
+    .custom-header{
+        display: flex; 
+        align-items: center;
+        justify-content:center;
+        flex-direction: column;
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <h2 class="text-center mb-4">Dictionary Search</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" name="query" id="wordInput" class="form-control" placeholder="Enter a word...">
+                    <button type="submit" class="btn btn-primary" onclick="searchWord()">Search</button>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+    {% if input %}
+    
+        <div class="content-section p-0 ">
+
+            <div class="custom-header mt-3 px-5 py-2">
+                <h2><b>Input</b> : <i>{{input}}</i></h2>
+                <h6><b>Phonetics</b> : {{phonetics}}</h6>
+                <br>
+                <audio id="player" src={{audio}}></audio>
+                <div align="center">
+                    <a onclick="document.getElementById('player').play()">
+                        <i class='fa fa-volume-up fa-2x'></i>
+                    </a>
+                </div>
+            </div>
+
+            <p class="float-left px-5" align="center">
+                <h4><b>Definition:</b> <i>{{definition}}</i></h4>
+                <h4><b>Example:</b> <i>{{example}}</i></h4>
+            </p>
+                Synonyms: {{synonyms}}
+            <hr>
+
+        </div>
+
+    {% else %}
+
+        <div class="content-section p-0">
+
+            <div class="custom-header mt-3 px-5 py-2">
+                <h2><b>Input</b> : <i>input</i></h2>
+                <h6><b>Phonetics</b> : <i>phonetics</i></h6>
+                <br>
+                <audio id="player" src=""></audio>
+                <div align="center">
+                    <i class='fa fa-volume-up fa-2x'></i>
+                </div>
+            </div>
+
+            <p class="float-left">
+                <h4>Definition: definition</h4>
+                <h4>Example: example</h4>
+            </p>
+            Synonyms: synonyms
+            <hr>
+
+        </div>
+
+    {% endif %}
+    
+</div>
+{% endblock content %}

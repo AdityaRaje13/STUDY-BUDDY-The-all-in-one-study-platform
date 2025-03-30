@@ -1,0 +1,31 @@
+ <!-- Statistics Section -->
+ <div class="stats-container mb-4">
+    <div class="row g-3">
+        <!-- Homework Pie Chart -->
+        <div class="col-md-4">
+            <div class="stat-card card shadow-sm border-0 p-3">
+                <h5 class="fw-semibold text-primary text-center">Homework Progress</h5>
+                <canvas id="homeworkChart" height="50"></canvas>
+                <small class="text-muted text-center d-block mt-2">Total: {{ total_homework_count }}</small>
+            </div>
+        </div>
+
+        <!-- Notes Created (Simple Figure) -->
+        <div class="col-md-4">
+            <div class="stat-card card shadow-sm border-0 p-3 text-center">
+                <h5 class="fw-semibold text-primary">Notes Created</h5>
+                <p class="display-6 fw-bold text-dark">{{ notes_count }}</p>
+                <small class="text-muted">This month</small>
+            </div>
+        </div>
+
+        <!-- To-Do Pie Chart -->
+        <div class="col-md-4">
+            <div class="stat-card card shadow-sm border-0 p-3">
+                <h5 class="fw-semibold text-primary text-center">To-Do Progress</h5>
+                <canvas id="todoChart" height="50"></canvas>
+                <small class="text-muted text-center d-block mt-2">Total: {{ total_todo_count }}</small>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,326 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<main class="main py-4">
+    <div class="container">
+        <!-- Page Header -->
+        <h2 class="text-center mb-5 fw-bold text-dark">Your Profile</h2>
+
+        <!-- Messages -->
+        {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Profile Card -->
+        <div class="profile-card card shadow-sm border-0 p-4">
+            <!-- Personal Details Section -->
+            <div class="personal-details">
+                <h3 class="fw-semibold text-primary mb-3">Personal Details</h3>
+                <div class="d-flex gap-5 mb-3">
+                    <div class="detail-item">
+                        <span class="label">First Name:</span>
+                        <span class="value">{{ request.user.first_name|default:"Not provided" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Last Name:</span>
+                        <span class="value">{{ request.user.last_name|default:"Not provided" }}</span>
+                    </div>
+                </div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="label">Username:</span>
+                        <span class="value">{{ request.user.username }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Email:</span>
+                        <span class="value">{{ request.user.email|default:"Not provided" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Joined:</span>
+                        <span class="value">{{ request.user.date_joined|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Stats Section -->
+            <div class="account-stats">
+                <h3 class="fw-semibold text-primary mb-3">Account Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <i class="fa fa-sticky-note fa-2x text-primary"></i>
+                        <div class="stat-info">
+                            <h5 class="fw-bold">{{ notes_count|default:0 }}</h5>
+                            <p class="text-muted">Notes Created</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa fa-book fa-2x text-primary"></i>
+                        <div class="stat-info">
+                            <h5 class="fw-bold">{{ pending_homework_count|default:0 }}</h5>
+                            <p class="text-muted">Homework Assigned</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa fa-check-square fa-2x text-primary"></i>
+                        <div class="stat-info">
+                            <h5 class="fw-bold">{{ completed_todo_count|default:0 }}</h5>
+                            <p class="text-muted">To-Dos Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Section -->
+            <div class="actions">
+                <h3 class="fw-semibold text-primary">Actions</h3>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        Edit Profile
+                    </button>
+                    <a href="/logout" class="btn btn-outline-danger px-4 py-2">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-semibold text-primary" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'edit_profile' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ request.user.first_name|default:'' }}" placeholder="Enter your first name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email|default:'' }}" placeholder="Enter your email" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>  
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    /* Main Container */
+    .main {
+        background-color: #e9ecef;
+        position: relative;
+        min-height: 80vh;
+    }
+
+    .container {
+        max-width: 900px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Personal Details Section */
+    .personal-details {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 20px;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-item .label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .detail-item .value {
+        font-size: 1.1rem;
+        color: #343a40;
+        font-weight: 600;
+    }
+
+    /* Account Stats Section */
+    .account-stats {
+        padding: 20px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        text-align: center;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        background: rgb(221, 223, 225);
+        border-radius: 10px;
+        transition: background 0.3s ease;
+    }
+
+    .stat-item:hover {
+        background: #e9ecef;
+    }
+
+    .stat-info h5 {
+        font-size: 1.5rem;
+        color: #343a40;
+        margin-bottom: 5px;
+    }
+
+    .stat-info p {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin: 0;
+    }
+
+    /* Actions Section */
+    .actions {
+        padding-top: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .details-grid,
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .d-flex.gap-5 {
+            flex-direction: column;
+            gap: 15px !important;
+        }
+    }
+</style>
+
+{% endblock content %}

@@ -1,0 +1,551 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<main class="main">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div></div>
+            <h2 class="text-center fw-bold text-dark">Your Learning Dashboard</h2>
+            <div class="user">
+                <h5 class="fw-semibold text-dark text-center">Welcome, <span class="text-primary"><i>{{ request.user }}</i></span></h5>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-container mb-3">
+            <div class="row g-4">
+                <a href="/homework" class="col-md-4">
+                    <div class="stat-card d-flex justify-content-between align-items-center">
+                        <div class="text-container">
+                            <h4 class="fw-semibold text-primary">Homework Progress</h4>
+                            <p class="text-muted mb-1">Total: <span class="fw-bold text-dark">{{ total_homework_count }}</span></p>
+                            <p class="text-muted mb-1">Completed: <span class="fw-bold text-success">{{ completed_homework_count }}</span></p>
+                            <p class="text-muted mb-0">Pending: <span class="fw-bold text-danger">{{ pending_homework_count }}</span></p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="homeworkChart" class="pie" width="100" height="100"></canvas>
+                        </div>
+                    </div>
+                </a>
+                <a href="/notes" class="col-md-4">
+                    <div class="stat-card text-center">
+                        <h5 class="fw-semibold text-primary mb-3">Notes Created</h5>
+                        <p class="fw-bold text-dark display-5 m-0">
+                            <span class="circle-border">{{ notes_count }}</span>
+                        </p>
+                        <small class="text-muted">This month</small>
+                    </div>
+                </a>
+                <a href="/todo" class="col-md-4">
+                    <div class="stat-card d-flex justify-content-between align-items-center">
+                        <div class="text-container">
+                            <h4 class="fw-semibold text-primary">To-Do Progress</h4>
+                            <p class="text-muted mb-1">Total: <span class="fw-bold text-dark">{{ total_todo_count }}</span></p>
+                            <p class="text-muted mb-1">Completed: <span class="fw-bold text-success">{{ completed_todo_count }}</span></p>
+                            <p class="text-muted mb-0">Pending: <span class="fw-bold text-danger">{{ pending_todo_count }}</span></p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="todoChart" class="pie" width="100" height="100"></canvas>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <!-- Cards Container -->
+                <div class="cards-container">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <a href="/homework" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Mark Homework</h5></div><img src="{% static 'images/homework.jpg' %}" class="card-img-top img-fluid" alt="Homework"><div class="card-body text-center"><p class="card-text text-muted">Track your homework progress.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/notes" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Create Notes</h5></div><img src="{% static 'images/notes.jpg' %}" class="card-img-top img-fluid" alt="Notes"><div class="card-body text-center"><p class="card-text text-muted">Organize your study notes.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/todo" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Create To-Do's</h5></div><img src="{% static 'images/todo.jpg' %}" class="card-img-top img-fluid" alt="To-Do"><div class="card-body text-center"><p class="card-text text-muted">Plan your daily tasks.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/youtube" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">YouTube Lectures</h5></div><img src="{% static 'images/youtube.jpg' %}" class="card-img-top img-fluid" alt="YouTube"><div class="card-body text-center"><p class="card-text text-muted">Watch educational videos.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/books" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Find Books</h5></div><img src="{% static 'images/books.jpg' %}" class="card-img-top img-fluid" alt="Books"><div class="card-body text-center"><p class="card-text text-muted">Access study resources.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/dictionary" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Dictionary</h5></div><img src="{% static 'images/dictionary.jpg' %}" class="card-img-top img-fluid" alt="Dictionary"><div class="card-body text-center"><p class="card-text text-muted">Boost your vocabulary.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/wikipedia" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Wikipedia</h5></div><img src="{% static 'images/wiki.jpg' %}" class="card-img-top img-fluid" alt="Wikipedia"><div class="card-body text-center"><p class="card-text text-muted">Explore diverse topics.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/conversion" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Conversions</h5></div><img src="{% static 'images/conversion.jpg' %}" class="card-img-top img-fluid" alt="Conversion"><div class="card-body text-center"><p class="card-text text-muted">Convert units easily.</p></div></div></a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/editor" class="text-decoration-none"><div class="mycard card shadow-sm border-0 hover-effect h-100"><div class="card-header bg-gradient text-white"><h5 class="card-title fw-semibold mb-0">Code Editor</h5></div><img src="{% static 'images/editor.jpg' %}" class="card-img-top img-fluid" alt="Editor"><div class="card-body text-center"><p class="card-text text-muted">Write and test code.</p></div></div></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column with New Features -->
+            <div class="col-lg-4">
+                <div class="graph-container mb-4">
+                    <h5 class="fw-semibold text-primary p-3">Your Progress Overview</h5>
+                    <div class="card shadow-sm border-0 p-3">
+                        {% if pending_homework_count == 0 and completed_homework_count == 0 and notes_count == 0 and completed_todo_count == 0 %}
+                            <p class="text-muted text-center" style="line-height: 1.6;">No data to display. Start adding homework, notes, or to-dos!</p>
+                        {% else %}
+                            <canvas id="progressChart" height="200"></canvas>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Study Resources Feature -->
+                <div class="card shadow-sm border-0 p-3 mb-4">
+                    <h5 class="fw-semibold text-primary mb-3">Study Resources</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary btn-sm dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Resource
+                        </button>
+                        <ul class="dropdown-menu w-100">
+                            <li><a class="dropdown-item" href="https://www.khanacademy.org" target="_blank">Khan Academy</a></li>
+                            <li><a class="dropdown-item" href="https://www.coursera.org" target="_blank">Coursera</a></li>
+                            <li><a class="dropdown-item" href="https://openstax.org" target="_blank">OpenStax Books</a></li>
+                            <li><a class="dropdown-item" href="https://www.wolframalpha.com" target="_blank">Wolfram Alpha</a></li>
+                            <li><a class="dropdown-item" href="https://www.edx.org" target="_blank">edX</a></li>
+                            <li><a class="dropdown-item" href="https://www.udemy.com" target="_blank">Udemy</a></li>
+                            <li><a class="dropdown-item" href="https://ocw.mit.edu" target="_blank">MIT OpenCourseWare</a></li>
+                            <li><a class="dropdown-item" href="https://www.codecademy.com" target="_blank">Codecademy</a></li>
+                            <li><a class="dropdown-item" href="https://www.udacity.com" target="_blank">Udacity</a></li>
+                            <li><a class="dropdown-item" href="https://brilliant.org" target="_blank">Brilliant</a></li>
+                            <li><a class="dropdown-item" href="https://www.geeksforgeeks.org" target="_blank">GeeksforGeeks</a></li>
+                            <li><a class="dropdown-item" href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></li>
+                        </ul>
+                        
+                    </div>
+                </div>
+
+                <!-- Todo list Feature -->
+                <div class="card shadow-sm border-0 p-3 mb-4">
+                    <h5 class="fw-semibold text-primary mb-3">Today's To-Do's</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for todo in todos %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ todo.task }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-muted">No to-dos for today.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Pomodoro Timer Feature -->
+                <div class="card shadow-sm border-0 p-3 mb-4">
+                    <h5 class="fw-semibold text-primary mb-3">Focus Timer</h5>
+                    <div class="pomodoro-container text-center">
+                        <div id="pomodoroDisplay" class="fw-bold text-dark display-6 mb-3">30:00</div>
+                        <button id="pomodoroStart" class="btn btn-primary btn-sm me-2">Start</button>
+                        <button id="pomodoroReset" class="btn btn-outline-primary btn-sm">Reset</button>
+                        <p id="pomodoroStatus" class="text-muted mt-2">Focus Time</p>
+                    </div>
+                </div>
+
+                <!-- Calendar Feature -->
+                <div class="card shadow-sm border-0 p-3 mb-4">
+                    <h5 class="fw-semibold text-primary mb-3">Calendar</h5>
+                    <div id="calendar" class="calendar-container"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- AI Chat Button and Modal (Unchanged) -->
+        <button class="btn btn-primary ai-chat-btn px-4 py-3" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+            <i class="bi bi-chat-dots"></i> Chat with AI
+        </button>
+        <div class="modal fade" id="aiChatModal" tabindex="-1" aria-labelledby="aiChatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="width: 700px; height: 600px;">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-semibold" id="aiChatModalLabel">AI Assistant</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column" style="height: 100%;">
+                        <div class="chat-box p-3 flex-grow-1" style="overflow-y: auto; background: #f8f9fa; border-radius: 8px;">
+                            <div id="welcomeMessage" class="text-muted text-center">Hello, I am your Study-Buddy AI! How can I assist you today?</div>
+                        </div>
+                        <div id="chatForm" class="input-group mt-3">
+                            <input type="text" name="query" class="form-control py-2" placeholder="Ask me anything..." id="userMessage" autocomplete="off" required>
+                            <button onclick="sendMessage()" type="button" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script>
+    // Existing Chat Logic (Unchanged)
+    async function sendMessage() {
+        let msg = document.getElementById('userMessage').value;
+        if (msg == "") {
+            alert("Message can't be empty");
+            return;
+        }
+        let chatBox = document.querySelector('.chat-box');
+        let aiResponse = "";
+        let outGoingMsg = document.createElement('div');
+        outGoingMsg.className = "outgoing-message";
+        outGoingMsg.innerHTML = `<span>${msg}</span>`;
+        chatBox.appendChild(outGoingMsg);
+        document.getElementById('userMessage').value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+        const response = await fetch('/chatbot/', {
+            method: "POST",
+            'Content-Type': "application/json",
+            body: JSON.stringify({query: msg})
+        });
+        if (response.ok) {
+            const res = await response.json();
+            aiResponse = res.response;
+            aiResponse = marked.parse(aiResponse);
+        } else {
+            aiResponse = "Something went wrong";
+        }
+        let inComingMsg = document.createElement('div');
+        inComingMsg.className = "incoming-message";
+        inComingMsg.innerHTML = `<span>${aiResponse}</span>`;
+        chatBox.appendChild(inComingMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Pomodoro Timer Logic
+    let pomodoroTime = 30 * 60; // 25 minutes in seconds
+    let breakTime = 5 * 60; // 5 minutes in seconds
+    let isRunning = false;
+    let isBreak = false;
+    let timer;
+
+    function updatePomodoroDisplay() {
+        let time = isBreak ? breakTime : pomodoroTime;
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        document.getElementById('pomodoroDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    document.getElementById('pomodoroStart').addEventListener('click', () => {
+        if (!isRunning) {
+            isRunning = true;
+            document.getElementById('pomodoroStart').textContent = 'Pause';
+            timer = setInterval(() => {
+                if (isBreak) {
+                    breakTime--;
+                    if (breakTime <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        isBreak = false;
+                        pomodoroTime = 25 * 60;
+                        document.getElementById('pomodoroStatus').textContent = 'Focus Time';
+                        document.getElementById('pomodoroStart').textContent = 'Start';
+                        alert('Break over! Back to work.');
+                    }
+                } else {
+                    pomodoroTime--;
+                    if (pomodoroTime <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        isBreak = true;
+                        breakTime = 5 * 60;
+                        document.getElementById('pomodoroStatus').textContent = 'Break Time';
+                        document.getElementById('pomodoroStart').textContent = 'Start';
+                        alert('Focus time complete! Take a break.');
+                    }
+                }
+                updatePomodoroDisplay();
+            }, 1000);
+        } else {
+            clearInterval(timer);
+            isRunning = false;
+            document.getElementById('pomodoroStart').textContent = 'Start';
+        }
+    });
+
+    document.getElementById('pomodoroReset').addEventListener('click', () => {
+        clearInterval(timer);
+        isRunning = false;
+        isBreak = false;
+        pomodoroTime = 25 * 60;
+        breakTime = 5 * 60;
+        document.getElementById('pomodoroStart').textContent = 'Start';
+        document.getElementById('pomodoroStatus').textContent = 'Focus Time';
+        updatePomodoroDisplay();
+    });
+
+    updatePomodoroDisplay();
+
+    // Calendar Logic 
+    function renderCalendar() {
+        const calendar = document.getElementById('calendar');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        let html = `<div class="calendar-header text-center mb-2">${now.toLocaleString('default', { month: 'long' })} ${year}</div>`;
+        html += '<div class="calendar-grid">';
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        weekdays.forEach(day => html += `<div class="calendar-day-header">${day}</div>`);
+
+        for (let i = 0; i < firstDay; i++) {
+            html += '<div class="calendar-day empty"></div>';
+        }
+        for (let day = 1; day <= daysInMonth; day++) {
+            const isToday = day === now.getDate() ? ' today' : '';
+            html += `<div class="calendar-day${isToday}">${day}</div>`;
+        }
+        html += '</div>';
+        calendar.innerHTML = html;
+    }
+    renderCalendar();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pending Homework', 'Completed Homework', 'Notes Created', 'Completed To-Dos'],
+                datasets: [{
+                    label: 'Count',
+                    data: [{{ pending_homework_count|default:0 }}, {{ completed_homework_count|default:0 }}, {{ notes_count|default:0 }}, {{ completed_todo_count|default:0 }}],
+                    backgroundColor: ['rgba(231, 76, 60, 0.7)', 'rgba(52, 152, 219, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(46, 204, 113, 0.7)'],
+                    borderColor: ['rgba(231, 76, 60, 1)', 'rgba(52, 152, 219, 1)', 'rgba(241, 196, 15, 1)', 'rgba(46, 204, 113, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Count' } }, x: { title: { display: true, text: 'Categories' } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        const homeworkCtx = document.getElementById('homeworkChart').getContext('2d');
+        const homeworkChart = new Chart(homeworkCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Completed'],
+                datasets: [{
+                    data: [{{ pending_homework_count|default:0 }}, {{ completed_homework_count|default:0 }}],
+                    backgroundColor: ['rgba(231, 76, 60, 0.7)', 'rgba(52, 152, 219, 0.7)'],
+                    borderColor: ['rgba(231, 76, 60, 1)', 'rgba(52, 152, 219, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        const todoCtx = document.getElementById('todoChart').getContext('2d');
+        const todoChart = new Chart(todoCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Completed'],
+                datasets: [{
+                    data: [{{ pending_todo_count|default:0 }}, {{ completed_todo_count|default:0 }}],
+                    backgroundColor: ['rgba(231, 76, 60, 0.7)', 'rgba(46, 204, 113, 0.7)'],
+                    borderColor: ['rgba(231, 76, 60, 1)', 'rgba(46, 204, 113, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    });
+</script>
+
+<style>
+    /* Existing Styles (Unchanged) */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f4f6f8;
+    }
+    .main {
+        background: linear-gradient(135deg, rgba(244, 246, 248, 0.9), rgba(233, 236, 239, 0.9)), url('https://images.unsplash.com/photo-1456513080510-6ebef9e8e054?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 1400px;
+        padding: 0 15px;
+    }
+    .stat-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .circle-border {
+        display: inline-block;
+        padding: 20px;
+        border: 3px solid #28a745;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    .pie {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .mycard {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .mycard:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .card-header.bg-gradient {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        padding: 10px;
+    }
+    .card-img-top {
+        height: 120px;
+        object-fit: cover;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .card-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .graph-container, .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+    .badge {
+        font-size: 0.75rem;
+    }
+    .ai-chat-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    .ai-chat-btn:hover {
+        background: linear-gradient(135deg, #2980b9, #2471a3);
+        transform: translateY(-2px);
+    }
+    .chat-box::-webkit-scrollbar {
+        width: 6px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+        background: #3498db;
+        border-radius: 3px;
+    }
+    .outgoing-message {
+        text-align: right;
+        margin: 10px 0;
+    }
+    .outgoing-message span {
+        background: #3498db;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 15px 15px 0 15px;
+        max-width: 70%;
+        display: inline-block;
+    }
+    .incoming-message {
+        text-align: left;
+        margin: 10px 0;
+    }
+    .incoming-message span {
+        background:rgb(39, 40, 41);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 15px 15px 15px 0;
+        max-width: 70%;
+        border: 10px solid rgb(173, 175, 176);
+        display: inline-block;
+    }
+
+    /* New Styles for Features */
+    .pomodoro-container {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    #pomodoroDisplay {
+        font-size: 2.5rem;
+        color: #2c3e50;
+    }
+    #pomodoroStatus {
+        font-size: 0.9rem;
+    }
+
+    .calendar-container {
+        font-size: 0.8rem;
+    }
+    .calendar-header {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        text-align: center;
+    }
+    .calendar-day-header {
+        font-weight: 500;
+        color: #6c757d;
+    }
+    .calendar-day {
+        padding: 5px;
+        border-radius: 50%;
+        background: #f8f9fa;
+    }
+    .calendar-day.today {
+        background: #3498db;
+        color: white;
+    }
+    .calendar-day.empty {
+        background: transparent;
+    }
+
+    .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-item:hover {
+        background: #e9ecef;
+    }
+</style>
+
+{% endblock content %}
