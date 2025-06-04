@@ -1,0 +1,602 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<main class="main">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar for Features -->
+            <div class="col-lg-3 sidebar">
+                <h5 class="fw-semibold text-primary mb-4">Features</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3">
+                        <a href="/homework" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/homework.jpg' %}" class="feature-icon me-3" alt="Homework">
+                            <span class="text-dark fw-medium">Mark Homework</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/notes" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/notes.jpg' %}" class="feature-icon me-3" alt="Notes">
+                            <span class="text-dark fw-medium">Create Notes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/todo" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/todo.jpg' %}" class="feature-icon me-3" alt="To-Do">
+                            <span class="text-dark fw-medium">Create To-Do's</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/youtube" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/youtube.jpg' %}" class="feature-icon me-3" alt="YouTube">
+                            <span class="text-dark fw-medium">YouTube Lectures</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/books" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/books.jpg' %}" class="feature-icon me-3" alt="Books">
+                            <span class="text-dark fw-medium">Find Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/dictionary" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/dictionary.jpg' %}" class="feature-icon me-3" alt="Dictionary">
+                            <span class="text-dark fw-medium">Dictionary</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/wikipedia" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/wiki.jpg' %}" class="feature-icon me-3" alt="Wikipedia">
+                            <span class="text-dark fw-medium">Wikipedia</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/conversion" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/conversion.jpg' %}" class="feature-icon me-3" alt="Conversion">
+                            <span class="text-dark fw-medium">Conversions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a href="/editor" class="nav-link d-flex align-items-center text-decoration-none">
+                            <img src="{% static 'images/editor.jpg' %}" class="feature-icon me-3" alt="Editor">
+                            <span class="text-dark fw-medium">Code Editor</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div></div>
+                    <h2 class="text-center fw-bold text-dark">Your Learning Dashboard</h2>
+                    <div class="user">
+                        <h5 class="fw-semibold text-dark text-center">Welcome, <span class="text-primary"><i>{{ request.user }}</i></span></h5>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="stats-container mb-4">
+                    <div class="row g-5">
+                        <div class="col-md-4">
+                            <a href="/homework" class="text-decoration-none">
+                                <div class="stat-card d-flex flex-column justify-content-center align-items-center h-100 text-center">
+                                    <div class="text-container">
+                                        <h4 class="fw-semibold text-primary mb-3">Homework Progress</h4>
+                                        <p class="text-muted mb-1">Total: <span class="fw-bold text-dark">{{ total_homework_count }}</span></p>
+                                        <p class="text-muted mb-1">Completed: <span class="fw-bold text-success">{{ completed_homework_count }}</span></p>
+                                        <p class="text-muted mb-0">Pending: <span class="fw-bold text-danger">{{ pending_homework_count }}</span></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/notes" class="text-decoration-none">
+                                <div class="stat-card d-flex flex-column justify-content-center align-items-center h-100 text-center">
+                                    <div class="text-container">
+                                        <h4 class="fw-semibold text-primary mb-3">Notes Created</h4>
+                                        <p class="fw-bold text-dark display-5 mb-1">
+                                            <span class="circle-border">{{ notes_count }}</span>
+                                        </p>
+                                        <small class="text-muted">This month</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/todo" class="text-decoration-none">
+                                <div class="stat-card d-flex flex-column justify-content-center align-items-center h-100 text-center">
+                                    <div class="text-container">
+                                        <h4 class="fw-semibold text-primary mb-3">To-Do Progress</h4>
+                                        <p class="text-muted mb-1">Total: <span class="fw-bold text-dark">{{ total_todo_count }}</span></p>
+                                        <p class="text-muted mb-1">Completed: <span class="fw-bold text-success">{{ completed_todo_count }}</span></p>
+                                        <p class="text-muted mb-0">Pending: <span class="fw-bold text-danger">{{ pending_todo_count }}</span></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <!-- Discover Communities Section -->
+                    <div class="col-lg-8">
+                        <div class="communities-container mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-bold text-dark">Discover Study Groups</h3>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createStudyGroupModal">
+                                    <i class="bi bi-plus-circle"></i> Create Study Group
+                                </button>
+                            </div>
+                            <div class="row g-4">
+
+                                {% for group in study_groups %}
+                                
+                                <div class="col-12">
+                                    <div class="community-card d-flex align-items-center">
+                                        <img src="{% static 'images/group.png' %}" class="community-img me-3" alt={{group.subject}}>
+                                        <div>
+                                            <h5 class="fw-semibold text-dark">{{group.name}}</h5>
+                                            <p class="text-muted mb-0">{{group.description}}</p>
+                                            <a href="{% url 'community' group.id %}" class="btn btn-outline-primary btn-sm mt-2">View Community</a>
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                                {% endfor %}                                                       
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column Features -->
+                    <div class="col-lg-4">
+                        <div class="graph-container mb-4">
+                            <h5 class="fw-semibold text-primary p-3">Your Progress Overview</h5>
+                            <div class="card shadow-sm border-0 p-3">
+                                {% if pending_homework_count == 0 and completed_homework_count == 0 and notes_count == 0 and completed_todo_count == 0 %}
+                                    <p class="text-muted text-center" style="line-height: 1.6;">No data to display. Start adding homework, notes, or to-dos!</p>
+                                {% else %}
+                                    <canvas id="progressChart" height="200"></canvas>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 p-3 mb-4">
+                            <h5 class="fw-semibold text-primary mb-3">Today's To-Do's</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for todo in todos %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ todo.task }}</span>
+                                    </li>
+                                {% empty %}
+                                    <li class="list-group-item text-muted">No to-dos for today.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="card shadow-sm border-0 p-3 mb-4">
+                            <h5 class="fw-semibold text-primary mb-3">Study Resources</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary btn-sm dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select Resource
+                                </button>
+                                <ul class="dropdown-menu w-100">
+                                    <li><a class="dropdown-item" href="https://www.khanacademy.org" target="_blank">Khan Academy</a></li>
+                                    <li><a class="dropdown-item" href="https://www.coursera.org" target="_blank">Coursera</a></li>
+                                    <li><a class="dropdown-item" href="https://openstax.org" target="_blank">OpenStax Books</a></li>
+                                    <li><a class="dropdown-item" href="https://www.wolframalpha.com" target="_blank">Wolfram Alpha</a></li>
+                                    <li><a class="dropdown-item" href="https://www.edx.org" target="_blank">edX</a></li>
+                                    <li><a class="dropdown-item" href="https://www.udemy.com" target="_blank">Udemy</a></li>
+                                    <li><a class="dropdown-item" href="https://ocw.mit.edu" target="_blank">MIT OpenCourseWare</a></li>
+                                    <li><a class="dropdown-item" href="https://www.codecademy.com" target="_blank">Codecademy</a></li>
+                                    <li><a class="dropdown-item" href="https://www.udacity.com" target="_blank">Udacity</a></li>
+                                    <li><a class="dropdown-item" href="https://brilliant.org" target="_blank">Brilliant</a></li>
+                                    <li><a class="dropdown-item" href="https://www.geeksforgeeks.org" target="_blank">GeeksforGeeks</a></li>
+                                    <li><a class="dropdown-item" href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 p-3 mb-4">
+                            <h5 class="fw-semibold text-primary mb-3">Focus Timer</h5>
+                            <div class="pomodoro-container text-center">
+                                <div id="pomodoroDisplay" class="fw-bold text-dark display-6 mb-3">30:00</div>
+                                <button id="pomodoroStart" class="btn btn-primary btn-sm me-2">Start</button>
+                                <button id="pomodoroReset" class="btn btn-outline-primary btn-sm">Reset</button>
+                                <p id="pomodoroStatus" class="text-muted mt-2">Focus Time</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Study Group Modal -->
+        <div class="modal fade" id="createStudyGroupModal" tabindex="-1" aria-labelledby="createStudyGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-semibold" id="createStudyGroupModalLabel">Create a Study Group</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="studyGroupName" class="form-label">Study Group Name</label>
+                                <input type="text" class="form-control" id="studyGroupName" name="groupname" placeholder="Enter study group name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studyGroupSubject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="studyGroupSubject" name="subject" placeholder="Enter subject" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studyGroupDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="studyGroupDescription" name="description" rows="4" placeholder="Enter description"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Create Study Group</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Button and Modal -->
+        <button class="btn btn-primary ai-chat-btn px-4 py-3" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+            <i class="bi bi-chat-dots"></i> Chat with AI
+        </button>
+        <div class="modal fade" id="aiChatModal" tabindex="-1" aria-labelledby="aiChatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="width: 700px; height: 600px;">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-semibold" id="aiChatModalLabel">AI Assistant</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column" style="height: 100%;">
+                        <div class="chat-box p-3 flex-grow-1" style="overflow-y: auto; background: #f8f9fa; border-radius: 8px;">
+                            <div id="welcomeMessage" class="text-muted text-center">Hello, I am your Study-Buddy AI! How can I assist you today?</div>
+                        </div>
+                        <div id="chatForm" class="input-group mt-3">
+                            <input type="text" name="query" class="form-control py-2" placeholder="Ask me anything..." id="userMessage" autocomplete="off" required>
+                            <button onclick="sendMessage()" type="button" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script>
+    // AI Chat Logic
+    async function sendMessage() {
+        let msg = document.getElementById('userMessage').value;
+        if (msg == "") {
+            alert("Message can't be empty");
+            return;
+        }
+        let chatBox = document.querySelector('.chat-box');
+        let aiResponse = "";
+        let outGoingMsg = document.createElement('div');
+        outGoingMsg.className = "outgoing-message";
+        outGoingMsg.innerHTML = `<span>${msg}</span>`;
+        chatBox.appendChild(outGoingMsg);
+        document.getElementById('userMessage').value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+        const response = await fetch('/chatbot/', {
+            method: "POST",
+            'Content-Type': "application/json",
+            body: JSON.stringify({query: msg})
+        });
+        if (response.ok) {
+            const res = await response.json();
+            aiResponse = res.response;
+            aiResponse = marked.parse(aiResponse);
+        } else {
+            aiResponse = "Something went wrong";
+        }
+        let inComingMsg = document.createElement('div');
+        inComingMsg.className = "incoming-message";
+        inComingMsg.innerHTML = `<span>${aiResponse}</span>`;
+        chatBox.appendChild(inComingMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Pomodoro Timer Logic
+    let pomodoroTime = 30 * 60; // 30 minutes in seconds
+    let breakTime = 5 * 60; // 5 minutes in seconds
+    let isRunning = false;
+    let isBreak = false;
+    let timer;
+
+    function updatePomodoroDisplay() {
+        let time = isBreak ? breakTime : pomodoroTime;
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        document.getElementById('pomodoroDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    document.getElementById('pomodoroStart').addEventListener('click', () => {
+        if (!isRunning) {
+            isRunning = true;
+            document.getElementById('pomodoroStart').textContent = 'Pause';
+            timer = setInterval(() => {
+                if (isBreak) {
+                    breakTime--;
+                    if (breakTime <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        isBreak = false;
+                        pomodoroTime = 30 * 60;
+                        document.getElementById('pomodoroStatus').textContent = 'Focus Time';
+                        document.getElementById('pomodoroStart').textContent = 'Start';
+                        alert('Break over! Back to work.');
+                    }
+                } else {
+                    pomodoroTime--;
+                    if (pomodoroTime <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        isBreak = true;
+                        breakTime = 5 * 60;
+                        document.getElementById('pomodoroStatus').textContent = 'Break Time';
+                        document.getElementById('pomodoroStart').textContent = 'Start';
+                        alert('Focus time complete! Take a break.');
+                    }
+                }
+                updatePomodoroDisplay();
+            }, 1000);
+        } else {
+            clearInterval(timer);
+            isRunning = false;
+            document.getElementById('pomodoroStart').textContent = 'Start';
+        }
+    });
+
+    document.getElementById('pomodoroReset').addEventListener('click', () => {
+        clearInterval(timer);
+        isRunning = false;
+        isBreak = false;
+        pomodoroTime = 30 * 60;
+        breakTime = 5 * 60;
+        document.getElementById('pomodoroStart').textContent = 'Start';
+        document.getElementById('pomodoroStatus').textContent = 'Focus Time';
+        updatePomodoroDisplay();
+    });
+
+    updatePomodoroDisplay();
+
+    // Chart.js Logic for Progress, Homework, and To-Do Charts
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pending Homework', 'Completed Homework', 'Notes Created', 'Completed To-Dos'],
+                datasets: [{
+                    label: 'Count',
+                    data: [{{ pending_homework_count|default:0 }}, {{ completed_homework_count|default:0 }}, {{ notes_count|default:0 }}, {{ completed_todo_count|default:0 }}],
+                    backgroundColor: ['rgba(231, 76, 60, 0.7)', 'rgba(52, 152, 219, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(46, 204, 113, 0.7)'],
+                    borderColor: ['rgba(231, 76, 60, 1)', 'rgba(52, 152, 219, 1)', 'rgba(241, 196, 15, 1)', 'rgba(46, 204, 113, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: { 
+                    y: { beginAtZero: true, title: { display: true, text: 'Count' } }, 
+                    x: { title: { display: true, text: 'Categories' } } 
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Modernized and Professional Styles */
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #f5f7fa;
+        color: #1a202c;
+    }
+    .main {
+        background: linear-gradient(135deg, rgba(245, 247, 250, 0.95), rgba(237, 242, 247, 0.95)), url('https://images.unsplash.com/photo-1456513080510-6ebef9e8e054?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding-top: 20px;
+    }
+    .container-fluid {
+        max-width: 1600px;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+    }
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .nav-link:hover {
+        background: #edf2f7;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding-left: 20px;
+    }
+
+    /* Statistics Cards */
+    .stat-card {
+        background: linear-gradient(135deg, #f7fafc, #edf2f7);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        min-height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .stat-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    .icon-container {
+        font-size: 2rem;
+    }
+    .circle-border {
+        display: inline-block;
+        padding: 15px;
+        border: 3px solid #38a169;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 1.25rem;
+    }
+    .pie {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .placeholder-chart {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Communities Cards */
+    .community-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .community-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    .community-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    /* Other Components */
+    .graph-container, .card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item {
+        background: #f7fafc;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+    .ai-chat-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #3182ce, #2b6cb0);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        padding: 15px 25px;
+        transition: all 0.3s ease;
+    }
+    .ai-chat-btn:hover {
+        background: linear-gradient(135deg, #2b6cb0, #2c5282);
+        transform: translateY(-3px);
+    }
+    .chat-box::-webkit-scrollbar {
+        width: 6px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+        background: #3182ce;
+        border-radius: 3px;
+    }
+    .outgoing-message {
+        text-align: right;
+        margin: 10px 0;
+    }
+    .outgoing-message span {
+        background: #3182ce;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 15px 15px 0 15px;
+        max-width: 70%;
+        display: inline-block;
+    }
+    .incoming-message {
+        text-align: left;
+        margin: 10px 0;
+    }
+    .incoming-message span {
+        background: #2d3748;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 15px 15px 15px 0;
+        max-width: 70%;
+        border: 1px solid #e2e8f0;
+        display: inline-block;
+    }
+
+    /* Pomodoro Timer */
+    .pomodoro-container {
+        background: #f7fafc;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    #pomodoroDisplay {
+        font-size: 2.75rem;
+        color: #1a202c;
+    }
+    #pomodoroStatus {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    .dropdown-item:hover {
+        background: #edf2f7;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .sidebar {
+            position: static;
+            margin-bottom: 20px;
+        }
+        .main-content {
+            padding-left: 0;
+        }
+    }
+</style>
+
+{% endblock content %}

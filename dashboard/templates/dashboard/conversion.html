@@ -1,0 +1,427 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<div class="converter-container">
+    <h1 class="title">Unit Converter</h1>
+
+    <div class="converter-card">
+        <div class="input-group">
+            <label for="type">Unit Type:</label>
+            <select id="type" class="drop" onchange="updateUnits()">
+                <option value="len">Length</option>
+                <option value="area">Area</option>
+                <option value="vol">Volume</option>
+                <option value="weight">Weight</option>
+                <option value="time">Time</option>
+                <option value="temp">Temperature</option>
+                <option value="speed">Speed</option>
+                <option value="pressure">Pressure</option>
+                <option value="energy">Energy</option>
+                <option value="power">Power</option>
+                <option value="data">Data</option>
+            </select>
+        </div>
+
+        <div class="converter">
+            <div class="input-group">
+                <label for="from-unit">From:</label>
+                <select id="from-unit" class="drop"></select>
+                <input type="number" id="input-value" class="input-box" placeholder="Enter value" step="any" />
+            </div>
+
+            <div class="input-group">
+                <label for="to-unit">To:</label>
+                <select id="to-unit" class="drop"></select>
+            </div>
+        </div>
+
+        <button onclick="convert()" class="convert-btn">Convert</button>
+        <div class="result" id="result">Result: -</div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Roboto', sans-serif;
+    }
+    .converter-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+        padding: 20px;
+    }
+    .title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .converter-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 600px;
+        transition: transform 0.3s ease;
+    }
+    .converter-card:hover {
+        transform: translateY(-5px);
+    }
+    .input-group {
+        margin-bottom: 20px;
+    }
+    .input-group label {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #34495e;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .drop, .input-box {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #dfe6e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: #f9fbfc;
+        transition: border-color 0.3s ease;
+    }
+    .drop:focus, .input-box:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+    .converter {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .converter .input-group {
+        flex: 1;
+    }
+    .convert-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #007bff, #00c4b4);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    .convert-btn:hover {
+        background: linear-gradient(90deg, #0056b3, #009c91);
+    }
+    .result {
+        margin-top: 20px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2d3436;
+        text-align: center;
+        background: #e9ecef;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+        .converter {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .converter-card {
+            padding: 20px;
+        }
+    }
+</style>
+
+<script>
+    const unitTypes = {
+        len: [
+            { value: "meters", label: "Meters (m)" },
+            { value: "kilometers", label: "Kilometers (km)" },
+            { value: "centimeters", label: "Centimeters (cm)" },
+            { value: "millimeters", label: "Millimeters (mm)" },
+            { value: "micrometers", label: "Micrometers (μm)" },
+            { value: "nanometers", label: "Nanometers (nm)" },
+            { value: "miles", label: "Miles (mi)" },
+            { value: "yards", label: "Yards (yd)" },
+            { value: "feet", label: "Feet (ft)" },
+            { value: "inches", label: "Inches (in)" },
+            { value: "nautical_miles", label: "Nautical Miles (nmi)" }
+        ],
+        area: [
+            { value: "sqmeters", label: "Square Meters (m²)" },
+            { value: "sqkilometers", label: "Square Kilometers (km²)" },
+            { value: "sqcentimeters", label: "Square Centimeters (cm²)" },
+            { value: "sqmillimeters", label: "Square Millimeters (mm²)" },
+            { value: "sqmiles", label: "Square Miles (mi²)" },
+            { value: "sqyards", label: "Square Yards (yd²)" },
+            { value: "sqfeet", label: "Square Feet (ft²)" },
+            { value: "sqinches", label: "Square Inches (in²)" },
+            { value: "hectares", label: "Hectares (ha)" },
+            { value: "acres", label: "Acres" }
+        ],
+        vol: [
+            { value: "liters", label: "Liters (L)" },
+            { value: "milliliters", label: "Milliliters (mL)" },
+            { value: "cubicmeters", label: "Cubic Meters (m³)" },
+            { value: "cubiccm", label: "Cubic Centimeters (cm³)" },
+            { value: "cubicmm", label: "Cubic Millimeters (mm³)" },
+            { value: "cubicinches", label: "Cubic Inches (in³)" },
+            { value: "cubicfeet", label: "Cubic Feet (ft³)" },
+            { value: "gallons", label: "Gallons (gal)" },
+            { value: "quarts", label: "Quarts (qt)" },
+            { value: "pints", label: "Pints (pt)" },
+            { value: "cups", label: "Cups (c)" },
+            { value: "fluid_ounces", label: "Fluid Ounces (fl oz)" }
+        ],
+        weight: [
+            { value: "kilograms", label: "Kilograms (kg)" },
+            { value: "grams", label: "Grams (g)" },
+            { value: "milligrams", label: "Milligrams (mg)" },
+            { value: "micrograms", label: "Micrograms (μg)" },
+            { value: "metric_tons", label: "Metric Tons (t)" },
+            { value: "pounds", label: "Pounds (lb)" },
+            { value: "ounces", label: "Ounces (oz)" },
+            { value: "stones", label: "Stones (st)" },
+            { value: "carats", label: "Carats (ct)" }
+        ],
+        time: [
+            { value: "seconds", label: "Seconds (s)" },
+            { value: "milliseconds", label: "Milliseconds (ms)" },
+            { value: "microseconds", label: "Microseconds (μs)" },
+            { value: "nanoseconds", label: "Nanoseconds (ns)" },
+            { value: "minutes", label: "Minutes (min)" },
+            { value: "hours", label: "Hours (hr)" },
+            { value: "days", label: "Days (d)" },
+            { value: "weeks", label: "Weeks (wk)" },
+            { value: "months", label: "Months (mo)" },
+            { value: "years", label: "Years (yr)" },
+            { value: "decades", label: "Decades" },
+            { value: "centuries", label: "Centuries" }
+        ],
+        temp: [
+            { value: "celsius", label: "Celsius (°C)" },
+            { value: "fahrenheit", label: "Fahrenheit (°F)" },
+            { value: "kelvin", label: "Kelvin (K)" }
+        ],
+        speed: [
+            { value: "meters_per_second", label: "Meters per Second (m/s)" },
+            { value: "kilometers_per_hour", label: "Kilometers per Hour (km/h)" },
+            { value: "miles_per_hour", label: "Miles per Hour (mph)" },
+            { value: "feet_per_second", label: "Feet per Second (ft/s)" },
+            { value: "knots", label: "Knots (kn)" }
+        ],
+        pressure: [
+            { value: "pascals", label: "Pascals (Pa)" },
+            { value: "kilopascals", label: "Kilopascals (kPa)" },
+            { value: "bars", label: "Bars (bar)" },
+            { value: "millibars", label: "Millibars (mbar)" },
+            { value: "atmospheres", label: "Atmospheres (atm)" },
+            { value: "psi", label: "Pounds per Square Inch (psi)" },
+            { value: "mmhg", label: "Millimeters of Mercury (mmHg)" }
+        ],
+        energy: [
+            { value: "joules", label: "Joules (J)" },
+            { value: "kilojoules", label: "Kilojoules (kJ)" },
+            { value: "calories", label: "Calories (cal)" },
+            { value: "kilocalories", label: "Kilocalories (kcal)" },
+            { value: "watt_hours", label: "Watt-Hours (Wh)" },
+            { value: "kilowatt_hours", label: "Kilowatt-Hours (kWh)" },
+            { value: "electronvolts", label: "Electronvolts (eV)" }
+        ],
+        power: [
+            { value: "watts", label: "Watts (W)" },
+            { value: "kilowatts", label: "Kilowatts (kW)" },
+            { value: "horsepower", label: "Horsepower (hp)" },
+            { value: "megawatts", label: "Megawatts (MW)" },
+            { value: "joules_per_second", label: "Joules per Second (J/s)" }
+        ],
+        data: [
+            { value: "bits", label: "Bits (b)" },
+            { value: "bytes", label: "Bytes (B)" },
+            { value: "kilobytes", label: "Kilobytes (KB)" },
+            { value: "megabytes", label: "Megabytes (MB)" },
+            { value: "gigabytes", label: "Gigabytes (GB)" },
+            { value: "terabytes", label: "Terabytes (TB)" },
+            { value: "petabytes", label: "Petabytes (PB)" }
+        ]
+    };
+
+    function updateUnits() {
+        const type = document.getElementById("type").value;
+        const fromUnit = document.getElementById("from-unit");
+        const toUnit = document.getElementById("to-unit");
+
+        fromUnit.innerHTML = "";
+        toUnit.innerHTML = "";
+
+        unitTypes[type].forEach(unit => {
+            const option1 = document.createElement("option");
+            const option2 = document.createElement("option");
+            option1.value = unit.value;
+            option1.text = unit.label;
+            option2.value = unit.value;
+            option2.text = unit.label;
+            fromUnit.appendChild(option1);
+            toUnit.appendChild(option2);
+        });
+    }
+
+    function convert() {
+        const type = document.getElementById("type").value;
+        const fromUnit = document.getElementById("from-unit").value;
+        const toUnit = document.getElementById("to-unit").value;
+        const inputValue = parseFloat(document.getElementById("input-value").value);
+        const resultElement = document.getElementById("result");
+
+        if (isNaN(inputValue)) {
+            resultElement.textContent = "Result: Please enter a valid number";
+            resultElement.style.color = "#e74c3c";
+            return;
+        }
+
+        let result;
+        const conversions = {
+            len: { // to meters
+                meters: 1,
+                kilometers: 1000,
+                centimeters: 0.01,
+                millimeters: 0.001,
+                micrometers: 0.000001,
+                nanometers: 0.000000001,
+                miles: 1609.34,
+                yards: 0.9144,
+                feet: 0.3048,
+                inches: 0.0254,
+                nautical_miles: 1852
+            },
+            area: { // to square meters
+                sqmeters: 1,
+                sqkilometers: 1000000,
+                sqcentimeters: 0.0001,
+                sqmillimeters: 0.000001,
+                sqmiles: 2589988.11,
+                sqyards: 0.836127,
+                sqfeet: 0.092903,
+                sqinches: 0.00064516,
+                hectares: 10000,
+                acres: 4046.86
+            },
+            vol: { // to liters
+                liters: 1,
+                milliliters: 0.001,
+                cubicmeters: 1000,
+                cubiccm: 0.001,
+                cubicmm: 0.000001,
+                cubicinches: 0.0163871,
+                cubicfeet: 28.3168,
+                gallons: 3.78541,
+                quarts: 0.946353,
+                pints: 0.473176,
+                cups: 0.236588,
+                fluid_ounces: 0.0295735
+            },
+            weight: { // to kilograms
+                kilograms: 1,
+                grams: 0.001,
+                milligrams: 0.000001,
+                micrograms: 0.000000001,
+                metric_tons: 1000,
+                pounds: 0.453592,
+                ounces: 0.0283495,
+                stones: 6.35029,
+                carats: 0.0002
+            },
+            time: { // to seconds
+                seconds: 1,
+                milliseconds: 0.001,
+                microseconds: 0.000001,
+                nanoseconds: 0.000000001,
+                minutes: 60,
+                hours: 3600,
+                days: 86400,
+                weeks: 604800,
+                months: 2628000, // approximate (30.4 days)
+                years: 31536000, // approximate (365 days)
+                decades: 315360000,
+                centuries: 3153600000
+            },
+            temp: {}, // Handled separately
+            speed: { // to meters per second
+                meters_per_second: 1,
+                kilometers_per_hour: 0.277778,
+                miles_per_hour: 0.44704,
+                feet_per_second: 0.3048,
+                knots: 0.514444
+            },
+            pressure: { // to pascals
+                pascals: 1,
+                kilopascals: 1000,
+                bars: 100000,
+                millibars: 100,
+                atmospheres: 101325,
+                psi: 6894.76,
+                mmhg: 133.322
+            },
+            energy: { // to joules
+                joules: 1,
+                kilojoules: 1000,
+                calories: 4.184,
+                kilocalories: 4184,
+                watt_hours: 3600,
+                kilowatt_hours: 3600000,
+                electronvolts: 1.60218e-19
+            },
+            power: { // to watts
+                watts: 1,
+                kilowatts: 1000,
+                horsepower: 745.7,
+                megawatts: 1000000,
+                joules_per_second: 1
+            },
+            data: { // to bytes
+                bits: 0.125,
+                bytes: 1,
+                kilobytes: 1024,
+                megabytes: 1048576,
+                gigabytes: 1073741824,
+                terabytes: 1099511627776,
+                petabytes: 1125899906842624
+            }
+        };
+
+        if (type === "temp") {
+            let celsius;
+            if (fromUnit === "celsius") celsius = inputValue;
+            else if (fromUnit === "fahrenheit") celsius = (inputValue - 32) * 5/9;
+            else if (fromUnit === "kelvin") celsius = inputValue - 273.15;
+
+            if (toUnit === "celsius") result = celsius;
+            else if (toUnit === "fahrenheit") result = (celsius * 9/5) + 32;
+            else if (toUnit === "kelvin") result = celsius + 273.15;
+        } else {
+            const convFactors = conversions[type];
+            const baseValue = inputValue * convFactors[fromUnit];
+            result = baseValue / convFactors[toUnit];
+        }
+
+        result = Math.round(result * 100000) / 100000; // Round to 5 decimal places
+        const toLabel = unitTypes[type].find(unit => unit.value === toUnit).label;
+        resultElement.textContent = `Result: ${result} ${toLabel}`;
+        resultElement.style.color = "#2d3436";
+    }
+
+    // Initialize units on page load
+    window.onload = updateUnits;
+</script>
+
+{% endblock content %}

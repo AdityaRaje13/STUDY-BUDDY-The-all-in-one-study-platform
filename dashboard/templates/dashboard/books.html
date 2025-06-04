@@ -1,0 +1,246 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<style>
+    /* Search Box Styling (unchanged) */
+    .search-box {
+        position: relative;
+        width: 650px;
+        background: rgba(187, 176, 176, 0.1);
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        margin: 40px auto;
+    }
+
+    .search-box:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        background: transparent;
+    }
+
+    .search-box input::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 18px;
+    }
+
+    .search-box .fa-search {
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .search-box .fa-search:hover {
+        color: #ff0000;
+        transform: scale(1.2);
+    }
+
+    .submit-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 50px;
+        border: none;
+        background-color: orangered;
+        color: white;
+    }
+
+    @media (max-width: 400px) {
+        .search-box {
+            width: 90%;
+        }
+    }
+
+    /* Book Card Styling */
+    .book-card {
+        display: flex;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        padding: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 900px;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-card img {
+        width: 150px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 20px;
+    }
+
+    .book-details {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .book-details h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 5px;
+    }
+
+    .book-details h4 {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .book-details p {
+        font-size: 0.9rem;
+        color: #495057;
+        line-height: 1.5;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Limit to 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .book-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    .book-meta span {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .book-meta .categories {
+        background: #e9ecef;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .book-meta .rating {
+        color: #f39c12;
+        font-weight: 500;
+    }
+
+    .preview-btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background-color: orangered;
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .preview-btn:hover {
+        background-color: #e03e00;
+    }
+
+    .no-results {
+        text-align: center;
+        margin-top: 50px;
+        color: #6c757d;
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .book-card {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .book-card img {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            justify-content: center;
+        }
+    }
+</style>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="search-box mt-5">
+        <input type="text" name="query" id="search" placeholder="Search your books here...">
+        <button type="submit" class="submit-btn"><i class="fa fa-search"></i> Search</button>
+    </div>
+
+    {% if results %}
+        {% for result in results %}
+            <div class="book-card">
+                <!-- Book Thumbnail -->
+                {% if result.thumbnail %}
+                    <img src="{{ result.thumbnail }}" alt="{{ result.title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/150x200?text=No+Image" alt="No Image">
+                {% endif %}
+
+                <!-- Book Details -->
+                <div class="book-details">
+                    <!-- Title and Subtitle -->
+                    <h3>{{ result.title }}</h3>
+                    {% if result.subtitle %}
+                        <h4>{{ result.subtitle }}</h4>
+                    {% endif %}
+
+                    <!-- Description -->
+                    {% if result.description %}
+                        <p>{{ result.description }}</p>
+                    {% else %}
+                        <p>No description available.</p>
+                    {% endif %}
+
+                    <!-- Metadata (Page Count, Categories, Rating) -->
+                    <div class="book-meta">
+                        {% if result.count %}
+                            <span><i class="fa fa-book"></i> {{ result.count }} pages</span>
+                        {% endif %}
+                        {% if result.categories %}
+                            <span class="categories">{{ result.categories|join:", " }}</span>
+                        {% endif %}
+                        {% if result.rating %}
+                            <span class="rating"><i class="fa fa-star"></i> {{ result.rating }}/5</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Preview Link -->
+                    {% if result.preview %}
+                        <a href="{{ result.preview }}" target="_blank" class="preview-btn">Preview Book</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3 class="no-results">Your Books will appear here...</h3>
+    {% endif %}
+</form>
+
+{% endblock content %}

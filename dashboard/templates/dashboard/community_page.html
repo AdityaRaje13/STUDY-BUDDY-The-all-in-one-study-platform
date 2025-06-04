@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #1a202c;
+        }
+        .main {
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.95), rgba(237, 242, 247, 0.95)), url('https://images.unsplash.com/photo-1456513080510-6ebef9e8e054?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        .container-fluid {
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+        .sidebar {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .nav-item{
+            background:rgb(243, 245, 247);
+            border-radius: 15px;
+        }
+        .nav-link:hover {
+            background: #edf2f7;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        .main-content {
+            padding-left: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 0.2rem rgba(49, 130, 206, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3182ce, #2b6cb0);
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2b6cb0, #2c5282);
+            transform: translateY(-2px);
+        }
+        .btn-outline-primary {
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background: #3182ce;
+            color: white;
+        }
+        .create-post-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #3182ce, #2b6cb0);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 15px 25px;
+            transition: all 0.3s ease;
+        }
+        .create-post-btn:hover {
+            background: linear-gradient(135deg, #2b6cb0, #2c5282);
+            transform: translateY(-3px);
+        }
+        .alert-container {
+            margin-bottom: 20px;
+        }
+        .alert {
+            border-radius: 8px;
+        }
+        .navbar-brand button {
+        background: linear-gradient(135deg,rgb(50, 148, 253),rgb(4, 56, 112));
+        border: none;
+        padding: 3px 36px;
+        font-size: 30px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+      .navbar-brand button:hover {
+        background: #0056b3;
+      }
+        @media (max-width: 992px) {
+            .sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+            .main-content {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar for Features -->
+                <div class="col-lg-3 sidebar mb-4">
+                    <a href="/home" class="navbar-brand">
+                        <button> Home </button>
+                    </a>
+                    <h5 class="fw-semibold text-primary mb-4 mt-4">Features</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-3">
+                            <a href="/homework" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/homework.jpg" class="feature-icon me-3" alt="Homework">
+                                <span class="text-dark fw-medium">Mark Homework</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/notes" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/notes.jpg" class="feature-icon me-3" alt="Notes">
+                                <span class="text-dark fw-medium">Create Notes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/todo" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/todo.jpg" class="feature-icon me-3" alt="To-Do">
+                                <span class="text-dark fw-medium">Create To-Do's</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/youtube" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/youtube.jpg" class="feature-icon me-3" alt="YouTube">
+                                <span class="text-dark fw-medium">YouTube Lectures</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/books" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/books.jpg" class="feature-icon me-3" alt="Books">
+                                <span class="text-dark fw-medium">Find Books</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/dictionary" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/dictionary.jpg" class="feature-icon me-3" alt="Dictionary">
+                                <span class="text-dark fw-medium">Dictionary</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/wikipedia" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/wiki.jpg" class="feature-icon me-3" alt="Wikipedia">
+                                <span class="text-dark fw-medium">Wikipedia</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/conversion" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/conversion.jpg" class="feature-icon me-3" alt="Conversion">
+                                <span class="text-dark fw-medium">Conversions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="/editor" class="nav-link d-flex align-items-center text-decoration-none">
+                                <img src="/static/images/editor.jpg" class="feature-icon me-3" alt="Editor">
+                                <span class="text-dark fw-medium">Code Editor</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-lg-9 main-content">
+                    <!-- Community Header -->
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="fw-bold text-dark">{{name}}</h2>
+                                    <p class="text-muted mb-1"><strong>Subject:</strong> {{subject}}</p>
+                                    <p class="text-muted mb-1">{{description}}</p>
+                                    <p class="text-muted mb-0"><small>Creator: {{creator}}</small></p>
+                                    <p class="text-muted mb-0"><small>Created At: {{created_at}}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts List -->
+                    <h3 class="fw-bold text-dark mb-4">Community Posts</h3>
+
+                    {% if allposts %}
+
+                        {% for item in allposts %}
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body">
+                                <h5 class="fw-semibold text-dark">{{ item.post.title }}</h5>
+                                <p class="text-muted mb-1"><small>Posted by {{ item.post.creator }} on {{ item.post.created_at }}</small></p>
+                                <p class="text-muted mb-2"><small>Type: {{ item.post.post_type }} </small></p>
+                                <p class="text-dark">{{ item.post.content }}</p>
+
+                                {% if item.post.attached_file %}
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Attached File:</strong></p>
+                                        {% with item.post.attached_file.url|lower as file_url %}
+                                            {% if ".pdf" in file_url %}
+                                                <a href="{{ item.post.attached_file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">View PDF</a>
+                                            {% elif ".jpg" in file_url or ".png" in file_url or ".jpeg" in file_url %}
+                                                <img src="{{ item.post.attached_file.url }}" alt="Attached Image" class="img-fluid rounded" style="max-height: 300px;">
+                                            {% else %}
+                                                <a href="{{ item.post.attached_file.url }}" download class="btn btn-sm btn-outline-secondary">Download File</a>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-primary btn-sm mt-2 upvote-btn" data-post-id="{{ item.post.id }}"
+                                            {% if user.is_authenticated %}
+                                                onclick="toggleUpvote(this)"
+                                            {% else %}
+                                                disabled title="Please log in to upvote"
+                                            {% endif %}>
+                                        <i class="bi {% if user.is_authenticated and item.has_upvoted %}bi-hand-index-thumb-fill{% else %}bi-hand-index-thumb{% endif %}"></i>
+                                        <span>Upvote</span>
+                                    </button>
+                                    <p class="mt-4 upvote-count">{{ item.post.upvote_count }} Upvote{{ item.post.upvote_count|pluralize }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+{% else %}
+
+    <h4>No posts available. Create a new post !!!!</h4>
+
+{% endif %}
+
+                </div>
+            </div>
+
+            <!-- Create Post Button and Modal -->
+            <button class="btn btn-primary create-post-btn px-4 py-3" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                <i class="bi bi-plus-circle"></i> Create Post
+            </button>
+            <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title fw-semibold" id="createPostModalLabel">Create a Post</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                           <form method="POST" action="{% url 'community' id %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <div class="mb-3">
+                                    <label for="postTitle" class="form-label">Title</label>
+                                    <input type="text" name="title" class="form-control" id="postTitle" placeholder="Enter post title">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="postContent" class="form-label">Content</label>
+                                    <textarea name="content" class="form-control" id="postContent" rows="4" placeholder="Enter post content"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="postType" class="form-label">Post Type</label>
+                                    <select name="postType" class="form-select" id="postType">
+                                        <option value="question">Question</option>
+                                        <option value="discussion">Discussion</option>
+                                        <option value="resource">Resource</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="file" class="form-label">Attach File</label>
+                                    <input type="file" name="file" class="form-control" id="file">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-sm">Submit Post</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleUpvote(button) {
+        const postId = button.getAttribute('data-post-id');
+        const icon = button.querySelector('i');
+        const countElement = button.parentElement.querySelector('.upvote-count');
+
+        // Send AJAX request to toggle upvote
+        fetch(`/post/${postId}/upvote/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // Get CSRF token for security
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Toggle icon based on upvote status
+                icon.classList.toggle('bi-hand-index-thumb');
+                icon.classList.toggle('bi-hand-index-thumb-fill');
+                icon.classList.add('upvote-animate');
+                
+                // Update upvote count
+                countElement.textContent = `${data.upvote_count} Upvote${data.upvote_count !== 1 ? 's' : ''}`;
+                
+                // Remove animation after it completes
+                setTimeout(() => {
+                    icon.classList.remove('upvote-animate');
+                }, 500);
+            } else {
+                alert('Error: ' + (data.error || 'Could not process upvote'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to process upvote');
+        });
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+</body>
+</html>
